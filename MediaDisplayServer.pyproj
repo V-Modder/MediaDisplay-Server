@@ -4,14 +4,18 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>af341064-c2d1-41c7-9c15-79689a35183e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>media_display_server.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>MediaDisplayServer</Name>
     <RootNamespace>MediaDisplayServer</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterArguments>
+    </InterpreterArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,11 +26,23 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="input_buffer.py" />
-    <Compile Include="pystream.py" />
-    <Compile Include="webservice.py" />
-    <Compile Include="__init__.py" />
-    <Compile Include="__main__.py" />
+    <Compile Include="media_display_server.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pystream\input_buffer.py" />
+    <Compile Include="pystream\main.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pystream\pystream.py" />
+    <Compile Include="pystream\webservice.py" />
+    <Compile Include="pystream\__init__.py" />
+    <Compile Include="pystream\__main__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="pystream\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="pystream\pyalarm.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

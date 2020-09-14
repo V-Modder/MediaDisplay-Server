@@ -7,7 +7,8 @@ from PyQt5.QtGui import QIcon, QPixmap, QFont, QMouseEvent
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 
-from pystream.input_buffer import InputBuffer
+#from pystream.input_buffer import InputBuffer
+from pystream.webservice import send_message
 
 def main():
     app = QApplication(sys.argv)
@@ -19,7 +20,6 @@ class PyStream(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.__input_buffer = InputBuffer()
         self.initUI()
 
     def initUI(self):
@@ -32,7 +32,7 @@ class PyStream(QMainWindow):
 
         self.background = QLabel(self)
         self.background.setGeometry(0, 0, 800, 480)
-        self.background.setPixmap(QPixmap("pystream/pyalarm.png"))
+        self.restore_gui()
 
         print("Init done")
         self.show()
@@ -40,9 +40,14 @@ class PyStream(QMainWindow):
     def __windowClicked(self, event: QMouseEvent):
         x = event.x()
         y = event.y()
-        self.__input_buffer.set_action("click", x, y)
+        msg = {"action": "click", "x": x, "y": y}
+        send_message(msg)
+        #self.__input_buffer.set_action("click", x, y)
 
     def update_gui(self, image):
         self.background.pixmap().loadFromData(image)
         self.background.update()
-        return self.__input_buffer.pop_action()
+        #return self.__input_buffer.pop_action()
+
+    def restore_gui(self):
+        self.background.setPixmap(QPixmap("pystream/pyalarm.png"))
