@@ -29,6 +29,9 @@
     <Compile Include="media_display_server.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="pystream\gitupdater.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="pystream\input_buffer.py" />
     <Compile Include="pystream\main.py">
       <SubType>Code</SubType>

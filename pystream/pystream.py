@@ -7,8 +7,7 @@ from PyQt5.QtGui import QIcon, QPixmap, QFont, QMouseEvent
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 
-#from pystream.input_buffer import InputBuffer
-from pystream.webservice import send_message
+from pystream.webservice import Webservice
 
 def main():
     app = QApplication(sys.argv)
@@ -41,7 +40,7 @@ class PyStream(QMainWindow):
         x = event.x()
         y = event.y()
         msg = {"action": "click", "x": x, "y": y}
-        send_message(msg)
+        Webservice.send_message(msg)
         #self.__input_buffer.set_action("click", x, y)
 
     def update_gui(self, image):
