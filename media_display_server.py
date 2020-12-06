@@ -1,4 +1,4 @@
-from pystream.main import start
+from pystream.pystream import main
 
 
-start()
+main()
