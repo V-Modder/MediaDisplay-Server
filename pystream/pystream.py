@@ -36,7 +36,7 @@ class PyStream(QMainWindow):
         self.background = QLabel(self)
         self.background.setGeometry(0, 0, 800, 480)
         self.restore_gui()
-
+        self.setCursor(QtCore.Qt.BlankCursor)
         logging.info("[GUI] Init done")
         self.show()
 
