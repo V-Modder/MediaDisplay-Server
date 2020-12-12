@@ -16,7 +16,7 @@ def mDNSinit(type, name):
     desc = {'deviceName': name}
     address = [socket.inet_aton(deviceIP)]
 
-    logging.info("[Server] Register Zeroconf server at %s:%s"%(deviceIP, port))
+    logging.info("[Server] Register Zeroconf server at %s:%s"%(deviceIP, wsPort))
     info = ServiceInfo(type_= deviceType + "._tcp.local.",
                        name = deviceType + "._tcp.local.",
                        addresses = address, 
@@ -30,14 +30,14 @@ def mDNSinit(type, name):
 
 class HandleServer(WebSocket):
     def handleMessage(self):
-        sendDataToReceivers(self.data)
+        self.sendDataToReceivers(self.data)
 
     def handleConnected(self):
         clients.append(self)
 
     def handleClose(self):
         clients.remove(self)
-        sendDataToReceivers(None)
+        self.sendDataToReceivers(None)
 
     def sendDataToReceivers(self, data):
         for receiver in receivers:
