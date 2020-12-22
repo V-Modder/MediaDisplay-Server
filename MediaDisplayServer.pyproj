@@ -30,6 +30,15 @@
     <Compile Include="media_display_server.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="pystream\analoggaugewidget.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pystream\gradiant_progressbar.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="pystream\metric.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="pystream\webservice.py" />
     <Compile Include="pystream\utils.py">
       <SubType>Code</SubType>
@@ -45,6 +54,8 @@
     <Folder Include="pystream\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="pystream\page_1.jpg" />
+    <Content Include="pystream\page_2.jpg" />
     <Content Include="pystream\pyalarm.png" />
   </ItemGroup>
   <ItemGroup>

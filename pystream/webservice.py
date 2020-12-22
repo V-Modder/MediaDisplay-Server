@@ -1,9 +1,10 @@
-import socket
 import logging
+import socket
 from threading import Thread
 from zeroconf import IPVersion, ServiceInfo, Zeroconf
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 from pystream.utils import macDeviceName, localIp
+from pystream.metric import Metric, parseMetric
 
 clients = []
 receivers = []
@@ -27,10 +28,10 @@ def mDNSinit(type, name):
     zeroconf = Zeroconf(ip_version=IPVersion.V4Only)
     zeroconf.register_service(info)
 
-
 class HandleServer(WebSocket):
     def handleMessage(self):
-        self.sendDataToReceivers(self.data)
+        metric = parseMetric(self.data)
+        self.sendDataToReceivers(metric)
 
     def handleConnected(self):
         clients.append(self)
