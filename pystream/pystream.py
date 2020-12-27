@@ -260,3 +260,5 @@ class PyStream(QMainWindow):
 
     def restore_gui(self):
         self.stack.setCurrentIndex(2)
+        self.label_room_temp.setText("00:00")
+        self.label_time.setText("--°C")
