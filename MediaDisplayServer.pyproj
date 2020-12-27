@@ -33,6 +33,9 @@
     <Compile Include="pystream\analoggaugewidget.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="pystream\event_message.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="pystream\gradiant_progressbar.py">
       <SubType>Code</SubType>
     </Compile>
@@ -52,11 +55,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="pystream\" />
+    <Folder Include="pystream\resource\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="pystream\page_1.jpg" />
-    <Content Include="pystream\page_2.jpg" />
-    <Content Include="pystream\pyalarm.png" />
+    <Content Include="pystream\resource\media.png" />
+    <Content Include="pystream\resource\next.png" />
+    <Content Include="pystream\resource\page_1.jpg" />
+    <Content Include="pystream\resource\page_2.jpg" />
+    <Content Include="pystream\resource\pause.png" />
+    <Content Include="pystream\resource\play.png" />
+    <Content Include="pystream\resource\prev.png" />
+    <Content Include="pystream\resource\pyalarm.png" />
+    <Content Include="pystream\resource\stop.png" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
