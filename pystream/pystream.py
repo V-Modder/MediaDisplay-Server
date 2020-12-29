@@ -13,6 +13,7 @@ from PyQt5.QtCore import pyqtSignal, Qt
 
 from pystream.webservice import WebSocketServer, Metric
 from pystream.analoggaugewidget import AnalogGaugeWidget 
+from pystream.rollinglabel import RollingLabel
 from pystream.gradiant_progressbar import GradiantProgressBar
 from pystream.event_message import EventMessage, Command, Action
 
@@ -72,18 +73,20 @@ class PyStream(QMainWindow):
         self.label_cpu_5 = self.__create_label(self.panel_1, 380, 333, text="--°C")
         self.label_cpu_6 = self.__create_label(self.panel_1, 620, 333, text="--°C")
 
-        self.__create_label(self.panel_1, 32, 384, text="GPU", font_size=20, color="#FFFFFF")
-        self.label_gpu_temp = self.__create_label(self.panel_1, 29, 417, text="--°C", font_size=15, color="#FFFFFF")
+        self.__create_label(self.panel_1, 35, 384, text="GPU", font_size=20, color="#FFFFFF")
+        self.label_gpu_temp = self.__create_label(self.panel_1, 37, 419, text="--°C", font_size=15, color="#FFFFFF")
         self.progress_gpu_load = self.__create_progressbar(self.panel_1, 95, 390, 174, 20)
         self.progress_gpu_mem_load = self.__create_progressbar(self.panel_1, 95, 420, 174, 20)
 
-        self.__create_label(self.panel_1, 275, 384, text="Network", font_size=20, color="#FFFFFF")
-        self.__create_label(self.panel_1, 365, 390, text="Down", font_size=15, color="#FFFFFF")
-        self.__create_label(self.panel_1, 365, 414, text="Up", font_size=15, color="#FFFFFF")
-        self.label_net_down = self.__create_label(self.panel_1, 430, 390, text="0", font_size=15, color="#FFFFFF")
-        self.label_net_up = self.__create_label(self.panel_1, 430, 414, text="0", font_size=15, color="#FFFFFF")
+        #self.__create_label(self.panel_1, 275, 384, text="Network", font_size=20, color="#FFFFFF")
+        self.__create_label(self.panel_1, 330, 395, text="Down", font_size=15, color="#FFFFFF")
+        self.__create_label(self.panel_1, 330, 419, text="Up", font_size=15, color="#FFFFFF")
+        self.label_net_down = self.__create_label(self.panel_1, 430, 395, width=100, height=25, text="0", font_size=15, color="#FFFFFF")
+        self.label_net_down.setAlignment(Qt.AlignRight)
+        self.label_net_up = self.__create_label(self.panel_1, 430, 419, width=100, height=25, text="0", font_size=15, color="#FFFFFF")
+        self.label_net_up.setAlignment(Qt.AlignRight)
 
-        self.__create_label(self.panel_1, 546, 379, text="Memory", font_size=20, color="#FFFFFF")
+        self.__create_label(self.panel_1, 546, 379, text="Memory", font_size=18, color="#FFFFFF")
         self.progress_mem_load = self.__create_progressbar(self.panel_1, 551, 407, 203, 34)
 
         #####################
@@ -100,9 +103,16 @@ class PyStream(QMainWindow):
         self.label_media_status = self.__create_label(self.panel_2, 60, 50, text="-", color="#FFFFFF")
         self.label_media_status.setAlignment(Qt.AlignCenter)
         self.label_media_status.resize(150, 25)
-        self.label_media_title = self.__create_label(self.panel_2, 0, 180, text="-", color="#FFFFFF")
-        self.label_media_title.setAlignment(Qt.AlignCenter)
-        self.label_media_title.resize(800, 25)
+        #self.label_media_title = self.__create_label(self.panel_2, 0, 180, text="-", color="#FFFFFF")
+        #self.label_media_title.setAlignment(Qt.AlignCenter)
+        self.label_media_title = RollingLabel(self.panel_2)
+        font = QFont("Decorative", 15)
+        font.setBold(True)
+        self.label_media_title.setFont(font)
+        self.label_media_title.setStyleSheet("color: %s;" % "#FFFFFF");
+        self.label_media_title.setGeometry(10, 180, 780, 25)
+        #self.label_media_title.setText("HandofBlood und Br4mm3n haben einfach keine Ahnung. Vielleicht kommt denen noch was")
+        self.label_media_title.setText("-")
         self.label_media_artist = self.__create_label(self.panel_2, 0, 210, text="-", color="#FFFFFF")
         self.label_media_artist.setAlignment(Qt.AlignCenter)
         self.label_media_artist.resize(800, 25)
@@ -144,14 +154,17 @@ class PyStream(QMainWindow):
         gauge.set_DisplayValueColor(0, 255, 255)
         return gauge
 
-    def __create_label(self, parent, x, y, text="", font_size=15, color="#00FFFF"):
+    def __create_label(self, parent, x, y, width=None, height=None, text="", font_size=15, color="#00FFFF"):
         label = QLabel(parent)
-        label.setText(text) #"--°C"
+        label.setText(text)
         font = QFont("Decorative", font_size)
         font.setBold(True)
         label.setFont(font)
         label.setStyleSheet("color: %s;" % color);
-        label.move(x, y)
+        if width is None or height is None:
+            label.move(x, y)
+        else:
+            label.setGeometry(x, y, width, height)
         return label
 
     def __create_progressbar(self, parent, x, y, width, height):

@@ -42,6 +42,9 @@
     <Compile Include="pystream\metric.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="pystream\rollinglabel.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="pystream\webservice.py" />
     <Compile Include="pystream\utils.py">
       <SubType>Code</SubType>
