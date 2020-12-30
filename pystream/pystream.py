@@ -132,7 +132,7 @@ class PyStream(QMainWindow):
         self.label_time = self.__create_label(self, 590, 0, text="00:00", font_size=15, color="#FFFFFF")
 
         self.restore_gui()
-        #self.setCursor(QtCore.Qt.BlankCursor)
+        self.setCursor(QtCore.Qt.BlankCursor)
         logging.info("[GUI] Init done")
         self.receive_signal.connect(self.receive_gui)
         self.show()
