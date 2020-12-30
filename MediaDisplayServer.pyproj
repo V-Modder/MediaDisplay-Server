@@ -61,6 +61,7 @@
     <Folder Include="pystream\resource\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="install.sh" />
     <Content Include="pystream\resource\media.png" />
     <Content Include="pystream\resource\next.png" />
     <Content Include="pystream\resource\page_1.jpg" />
