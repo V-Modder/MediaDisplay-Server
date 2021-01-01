@@ -57,8 +57,14 @@ splash quiet > cmdline.txt
 #Disable the Raspberry Pi ‘color test’ by adding the line disable_splash=1 to /boot/config.txt.
 #Disable the Raspberry Pi logo in the corner of the screen by adding logo.nologo to /boot/cmdline.txt.
 #Disable the various bits of output from the kernel and friends by adding consoleblank=0 loglevel=1 quiet to /boot/cmdline.txt.
-
+echo 'SUBSYSTEM=="backlight",RUN+="/bin/chmod 666 /sys/class/backlight/%k/brightness /sys/class/backlight/%k/bl_power"' | sudo tee -a /etc/udev/rules.d/backlight-permissions.rules
 #Remove Taskbar
 #Change background
 #Disable screensaver
+#edit /etc/xdg/lxsession/LXDE-pi/autostart as root
+#sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
+#Add these lines if they do not already exist
+#@xset s noblank 
+#@xset s off 
+#@xset -dpms
 #Autostart app

@@ -11,6 +11,9 @@ from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSignal, Qt
 
+from rpi_backlight import Backlight
+from rpi_backlight.utils import FakeBacklightSysfs
+
 from pystream.webservice import WebSocketServer, Metric
 from pystream.analoggaugewidget import AnalogGaugeWidget 
 from pystream.rollinglabel import RollingLabel
@@ -30,13 +33,19 @@ class PyStream(QMainWindow):
         super().__init__()
         self.__server = WebSocketServer(self)
         self.__server.start()
+        try:
+            self.backlight = Backlight()
+        except:
+            self.fakeBacklightSysfs = FakeBacklightSysfs()
+            self.fakeBacklightSysfs.__enter__()
+            self.backlight = Backlight(backlight_sysfs_path=self.fakeBacklightSysfs.path)
         self.initUI()
 
     def initUI(self):
         logging.info("[GUI] Init main frame")
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setGeometry(0, 0, 800, 480)
-        self.setWindowTitle("PyAlarm")
+        self.setWindowTitle("MediaDisplay-Server")
         self.setWindowIcon(QIcon("pystream/resource/pyalarm.png"))
 
         self.is_updating = False
@@ -52,7 +61,6 @@ class PyStream(QMainWindow):
 
         #####################
         ##### Panel 1
-        #self.panel_1.setStyleSheet("background-color: #000000")
         background_1 = QLabel(self.panel_1)
         background_1.setGeometry(0, 0, 800, 480)
         background_1.setStyleSheet("background-image: url(pystream/resource/page_1.jpg);")
@@ -103,15 +111,12 @@ class PyStream(QMainWindow):
         self.label_media_status = self.__create_label(self.panel_2, 60, 50, text="-", color="#FFFFFF")
         self.label_media_status.setAlignment(Qt.AlignCenter)
         self.label_media_status.resize(150, 25)
-        #self.label_media_title = self.__create_label(self.panel_2, 0, 180, text="-", color="#FFFFFF")
-        #self.label_media_title.setAlignment(Qt.AlignCenter)
         self.label_media_title = RollingLabel(self.panel_2)
         font = QFont("Decorative", 15)
         font.setBold(True)
         self.label_media_title.setFont(font)
         self.label_media_title.setStyleSheet("color: %s;" % "#FFFFFF");
         self.label_media_title.setGeometry(10, 180, 780, 25)
-        #self.label_media_title.setText("HandofBlood und Br4mm3n haben einfach keine Ahnung. Vielleicht kommt denen noch was")
         self.label_media_title.setText("-")
         self.label_media_artist = self.__create_label(self.panel_2, 0, 210, text="-", color="#FFFFFF")
         self.label_media_artist.setAlignment(Qt.AlignCenter)
@@ -263,6 +268,13 @@ class PyStream(QMainWindow):
         if data is None:
             data = Metric(reset = True)
         self.receive_signal.emit(data)
+
+        if data.send_display_brightness == True:
+            msgObj = EventMessage(Action.Brightness, self.backlight.brightness)
+            msg = json.dumps(msgObj.__dict__)
+            self.__server.broadcast(msg)
+        if data.display_brightness is not None and data.display_brightness >= 0 and data.display_brightness <= 100:
+            self.backlight.brightness = data.display_brightness
 
     def enable_gui(self):
         if self.stack.currentIndex() == 2:

@@ -1,6 +1,7 @@
 
 class Action:
     Click = 1
+    Brightness = 2
 
 class Command:
     Next = "key_next"
