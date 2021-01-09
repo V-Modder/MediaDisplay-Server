@@ -7,9 +7,9 @@ class GradiantProgressBar(QProgressBar):
         super().__init__(parent=parent)
         self.background_color = Qt.gray
         self.gradian_colors = [[.00, Qt.cyan],
-                                [.7, Qt.cyan],
-                                [.75, Qt.yellow],
-                                [.85, Qt.red]
+                                [.699, Qt.cyan],
+                                [.7, Qt.yellow],
+                                [.87, Qt.red]
                                 ]
 
     def paintEvent(self, event):
