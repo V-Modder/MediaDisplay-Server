@@ -72,7 +72,7 @@ class PyStream(QMainWindow):
         self.gauge_cpu_3 = self.__create_gauge(self.panel_1, 580, 67)
         self.gauge_cpu_4 = self.__create_gauge(self.panel_1, 95, 230)
         self.gauge_cpu_5 = self.__create_gauge(self.panel_1, 335, 230)
-        self.gauge_cpu_6 = self.__create_gauge(self.panel_1, 560, 230)
+        self.gauge_cpu_6 = self.__create_gauge(self.panel_1, 580, 230)
 
         self.label_cpu_1 = self.__create_label(self.panel_1, 135, 164, text="--°C")
         self.label_cpu_2 = self.__create_label(self.panel_1, 380, 164, text="--°C")
