@@ -1,4 +1,4 @@
 from pystream.pystream import main
+import os
 
-
-main()
+main(os.getcwd())

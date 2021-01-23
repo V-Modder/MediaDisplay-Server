@@ -1,9 +1,9 @@
 import git 
+import subprocess
 
-
-def update():
-    g = git.cmd.Git("E:\workspace\MediaDisplay")
-    result = g.pull()
-
-    x = 0
-    
+class GitUpdater:
+    def update(path):
+        g = git.cmd.Git(path)
+        result = g.pull()
+        if len(result) > 0:
+            subprocess.run(args=[(path / "media_display_server.py")])

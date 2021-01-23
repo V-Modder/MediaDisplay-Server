@@ -19,18 +19,20 @@ from pystream.analoggaugewidget import AnalogGaugeWidget
 from pystream.rollinglabel import RollingLabel
 from pystream.gradiant_progressbar import GradiantProgressBar
 from pystream.event_message import EventMessage, Command, Action
+from pystream.gitupdater import GitUpdater
 
-def main():
+def main(rootPath):
     app = QApplication(sys.argv)
     global window 
-    window = PyStream()
+    window = PyStream(rootPath)
     sys.exit(app.exec_())
 
 class PyStream(QMainWindow):
     receive_signal = pyqtSignal(Metric)
 
-    def __init__(self):
+    def __init__(self, rootPath):
         super().__init__()
+        self.rootPath = rootPath
         self.__server = WebSocketServer(self)
         self.__server.start()
         try:
@@ -65,8 +67,6 @@ class PyStream(QMainWindow):
         background_1.setGeometry(0, 0, 800, 480)
         background_1.setStyleSheet("background-image: url(pystream/resource/page_1.jpg);")
 
-        self.__create_button(self.panel_1, 774, 227, 26, 26, "arrow_right.png", lambda:self.__change_page("Forward"))
-
         self.gauge_cpu_1 = self.__create_gauge(self.panel_1, 95, 67)
         self.gauge_cpu_2 = self.__create_gauge(self.panel_1, 335, 67)
         self.gauge_cpu_3 = self.__create_gauge(self.panel_1, 580, 67)
@@ -96,14 +96,14 @@ class PyStream(QMainWindow):
 
         self.__create_label(self.panel_1, 546, 379, text="Memory", font_size=18, color="#FFFFFF")
         self.progress_mem_load = self.__create_progressbar(self.panel_1, 551, 407, 203, 34)
+        
+        self.__create_button(self.panel_1, 774, 227, 26, 26, "arrow_right.png", lambda:self.__change_page("Forward"))
 
         #####################
         ##### Panel 2
         background_2 = QLabel(self.panel_2)
         background_2.setGeometry(0, 0, 800, 480)
         background_2.setStyleSheet("background-image: url(pystream/resource/page_2.jpg);")
-
-        self.__create_button(self.panel_2, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
 
         self.label_media_image = self.__create_label(self.panel_2, 325, 10)
         self.label_media_image.resize(150, 150)
@@ -128,6 +128,10 @@ class PyStream(QMainWindow):
         self.__create_button(self.panel_2, 448, 318, 75, 75, "next.png", lambda:self.__send_key(Command.Next))
         self.__create_button(self.panel_2, 40, 280, 75, 75, "volume_up.png", lambda:self.__send_key(Command.VolumeUp))
         self.__create_button(self.panel_2, 40, 365, 75, 75, "volume_down.png", lambda:self.__send_key(Command.VolumeDown))
+        
+        self.__create_button(self.panel_2, 774, 454, 26, 26, "refresh.png", self.update_app)
+
+        self.__create_button(self.panel_2, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
 
         #####################
         ##### Panel 3
@@ -284,3 +288,6 @@ class PyStream(QMainWindow):
         self.stack.setCurrentIndex(2)
         self.label_room_temp.setText("--°C")
         self.label_time.setText("00:00")
+
+    def update_app(self):
+        GitUpdater.update(self.path)
