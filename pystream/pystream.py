@@ -86,7 +86,6 @@ class PyStream(QMainWindow):
         self.progress_gpu_load = self.__create_progressbar(self.panel_1, 95, 390, 174, 20)
         self.progress_gpu_mem_load = self.__create_progressbar(self.panel_1, 95, 420, 174, 20)
 
-        #self.__create_label(self.panel_1, 275, 384, text="Network", font_size=20, color="#FFFFFF")
         self.__create_label(self.panel_1, 330, 395, text="Down", font_size=15, color="#FFFFFF")
         self.__create_label(self.panel_1, 330, 419, text="Up", font_size=15, color="#FFFFFF")
         self.label_net_down = self.__create_label(self.panel_1, 430, 395, width=100, height=25, text="0", font_size=15, color="#FFFFFF")
@@ -105,12 +104,14 @@ class PyStream(QMainWindow):
         background_2.setGeometry(0, 0, 800, 480)
         background_2.setStyleSheet("background-image: url(pystream/resource/page_2.jpg);")
 
-        self.label_media_image = self.__create_label(self.panel_2, 325, 10)
+        self.label_media_image = self.__create_label(self.panel_2, 325, 30)
         self.label_media_image.resize(150, 150)
-        self.label_media_image.setPixmap(QPixmap("pystream/resource/media.png"))
+        self.label_media_image.setStyleSheet("border-image: url(pystream/resource/media.png);")
+
         self.label_media_status = self.__create_label(self.panel_2, 60, 50, text="-", color="#FFFFFF")
         self.label_media_status.setAlignment(Qt.AlignCenter)
         self.label_media_status.resize(150, 25)
+
         self.label_media_title = RollingLabel(self.panel_2)
         font = QFont("Decorative", 15)
         font.setBold(True)
@@ -118,6 +119,7 @@ class PyStream(QMainWindow):
         self.label_media_title.setStyleSheet("color: %s;" % "#FFFFFF");
         self.label_media_title.setGeometry(10, 180, 780, 25)
         self.label_media_title.setText("-")
+
         self.label_media_artist = self.__create_label(self.panel_2, 0, 210, text="-", color="#FFFFFF")
         self.label_media_artist.setAlignment(Qt.AlignCenter)
         self.label_media_artist.resize(800, 25)
@@ -129,7 +131,7 @@ class PyStream(QMainWindow):
         self.__create_button(self.panel_2, 40, 280, 75, 75, "volume_up.png", lambda:self.__send_key(Command.VolumeUp))
         self.__create_button(self.panel_2, 40, 365, 75, 75, "volume_down.png", lambda:self.__send_key(Command.VolumeDown))
         
-        self.__create_button(self.panel_2, 774, 454, 26, 26, "refresh.png", self.update_app)
+        self.__create_button(self.panel_2, 720, 400, 50, 50, "refresh.png", self.update_app)
 
         self.__create_button(self.panel_2, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
 
@@ -186,7 +188,7 @@ class PyStream(QMainWindow):
 
     def __create_button(self, parent, x, y, width, height, image, click):
         button = QPushButton(parent)
-        button.setStyleSheet("background-image: url(pystream/resource/" + image + ");")
+        button.setStyleSheet("border-image: url(pystream/resource/" + image + ");")
         button.clicked.connect(click)
         button.setGeometry(x, y, width, height)
         button.setFlat(True)
