@@ -1,11 +1,15 @@
-import git 
+from git import Repo, Remote, FetchInfo
 import subprocess
 import sys
 
 class GitUpdater:
     def update(path):
-        g = git.cmd.Git(path)
-        result = g.pull()
-        if len(result) > 0:
-            subprocess.Popen(args=["python", path + "/media_display_server.py"], cwd = path)
-            sys.exit()
+        try:
+            repo = Repo(path)
+            remote = repo.remotes[0]
+            fetchInfos = remote.pull()
+            if len(fetchInfos) > 0 and fetchInfos[0].flags & FetchInfo.NEW_HEAD & FetchInfo.FAST_FORWARD > 0:
+                subprocess.Popen(args=["python", path + "/media_display_server.py"], cwd = path)
+                sys.exit()
+        except Exception as e:
+            print(e)

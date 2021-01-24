@@ -136,7 +136,6 @@ class PyStream(QMainWindow):
         #####################
         ##### Panel 3
         self.panel_3.setStyleSheet("background-image: url(pystream/resource/pyalarm.png);")
-        self.__create_button(self.panel_3, 774, 454, 26, 26, "refresh.png", self.update_app)
 
         self.label_room_temp = self.__create_label(self, 110, 0, text="--°C", color="#FFFFFF")
         self.label_time = self.__create_label(self, 590, 0, text="00:00", font_size=15, color="#FFFFFF")
