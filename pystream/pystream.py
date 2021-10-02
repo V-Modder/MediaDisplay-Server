@@ -10,6 +10,7 @@ from PyQt5.QtGui import QIcon, QPixmap, QFont, QMouseEvent
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSignal, Qt
+from pystream.pyrelay import PyRelay
 
 from rpi_backlight import Backlight
 from rpi_backlight.utils import FakeBacklightSysfs
@@ -35,6 +36,7 @@ class PyStream(QMainWindow):
         self.rootPath = rootPath
         self.__server = WebSocketServer(self)
         self.__server.start()
+        self.__relay = PyRelay()
         try:
             self.backlight = Backlight()
         except:
@@ -134,11 +136,21 @@ class PyStream(QMainWindow):
         self.__create_button(self.panel_2, 720, 400, 50, 50, "refresh.png", self.update_app)
 
         self.__create_button(self.panel_2, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
+        self.__create_button(self.panel_1, 774, 227, 26, 26, "arrow_right.png", lambda:self.__change_page("Forward"))
 
         #####################
         ##### Panel 3
-        self.panel_3.setStyleSheet("background-image: url(pystream/resource/pyalarm.png);")
+        background_3 = QLabel(self.panel_3)
+        background_3.setGeometry(0, 0, 800, 480)
+        background_3.setStyleSheet("background-image: url(pystream/resource/page_2.jpg);")
 
+        self.__create_button(self.panel_3, 277, 280, 100, 120, "desk_lamp.png", press=lambda:self.__relay.activate_relay(PyRelay.RELAY_LAPTOP_PSU), release=lambda:self.__relay.deactivate_relay(PyRelay.RELAY_LAPTOP_PSU), checkable=True)
+        self.__create_button(self.panel_3, 400, 280, 100, 120, "keyboard.png", press=lambda:self.__relay.activate_relay(PyRelay.RELAY_SWITCH_KVM), release=lambda:self.__relay.deactivate_relay(PyRelay.RELAY_SWITCH_KVM))
+        self.__create_button(self.panel_3, 523, 280, 100, 120, "laptop.png", press=lambda:self.__relay.activate_relay(PyRelay.RELAY_DESK_LAMP), release=lambda:self.__relay.deactivate_relay(PyRelay.RELAY_DESK_LAMP), checkable=True)
+        
+        self.__create_button(self.panel_3, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
+
+        
         self.label_room_temp = self.__create_label(self, 110, 0, text="--°C", color="#FFFFFF")
         self.label_time = self.__create_label(self, 590, 0, text="00:00", font_size=15, color="#FFFFFF")
 
@@ -186,10 +198,27 @@ class PyStream(QMainWindow):
         progress.setGeometry(x, y, width, height)
         return progress
 
-    def __create_button(self, parent, x, y, width, height, image, click):
+    def __create_button(self, parent, x, y, width, height, image, click=None, press=None, release=None, checkable=False):
         button = QPushButton(parent)
-        button.setStyleSheet("border-image: url(pystream/resource/" + image + ");")
-        button.clicked.connect(click)
+        if checkable:
+            pressed_image = image.sub(r'.*(\.)[^.]*', '\\1', "_pressed.")
+            button.setStyleSheet("""@QPushButton {
+                    border-image: url(pystream/resource/" + """ + image + """;
+                }
+                QPushButton:checked {
+                    border-image: url(pystream/resource/" + """ + pressed_image + """
+                }@""")
+        else:
+            button.setStyleSheet("border-image: url(pystream/resource/" + image + ");")
+        
+        if click is not None:
+            button.clicked.connect(click)
+        if press is not None:
+            button.pressed.connect(press)
+        if release is not None:
+            button.released.connect(release)
+
+        button.setCheckable(checkable)
         button.setGeometry(x, y, width, height)
         button.setFlat(True)
         return button
