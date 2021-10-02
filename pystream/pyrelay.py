@@ -31,7 +31,8 @@ class PyRelay:
         if not self.__relay_board.is_connected:
             self.__connect()
         
-        self.__relay_board.switchon(relay_number)
+        if self.__relay_board.is_connected:
+            self.__relay_board.switchon(relay_number)
 
     def deactivate_relay(self, relay_number):
         if not self.__validate_input(relay_number):
@@ -40,7 +41,8 @@ class PyRelay:
         if not self.__relay_board.is_connected:
             self.__connect()
         
-        self.__relay_board.switchoff(relay_number)
+        if self.__relay_board.is_connected:
+            self.__relay_board.switchoff(relay_number)
     
     def toggle_relay(self, relay_number):
         if not self.__validate_input(relay_number):
@@ -49,11 +51,12 @@ class PyRelay:
         if not self.__relay_board.is_connected:
             self.__connect()
         
-        state = self.__relay_board.getstatus(relay_number)
-        if state == 1:
-            self.__relay_board.switchoff(relay_number)
-        else:
-            self.__relay_board.switchon(relay_number)
+        if self.__relay_board.is_connected:
+            state = self.__relay_board.getstatus(relay_number)
+            if state == 1:
+                self.__relay_board.switchoff(relay_number)
+            else:
+                self.__relay_board.switchon(relay_number)
 
     def __validate_input(self, input):
         return input >= 1 and input <= 4

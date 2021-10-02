@@ -21,7 +21,6 @@ from pystream.analoggaugewidget import AnalogGaugeWidget
 from pystream.rollinglabel import RollingLabel
 from pystream.gradiant_progressbar import GradiantProgressBar
 from pystream.event_message import EventMessage, Command, Action
-from pystream.gitupdater import GitUpdater
 
 def main(rootPath):
     app = QApplication(sys.argv)
@@ -38,12 +37,14 @@ class PyStream(QMainWindow):
         self.__server = WebSocketServer(self)
         self.__server.start()
         self.__relay = PyRelay()
+    
         try:
             self.backlight = Backlight()
         except:
             self.fakeBacklightSysfs = FakeBacklightSysfs()
             self.fakeBacklightSysfs.__enter__()
             self.backlight = Backlight(backlight_sysfs_path=self.fakeBacklightSysfs.path)
+        
         self.initUI()
 
     def initUI(self):
@@ -145,9 +146,9 @@ class PyStream(QMainWindow):
         background_3.setGeometry(0, 0, 800, 480)
         background_3.setStyleSheet("background-image: url(pystream/resource/page_2.jpg);")
 
-        self.__create_button(self.panel_3, 100, 280, 100, 120, "desk_lamp.png", self.__relay.toggle_relay(PyRelay.RELAY_DESK_LAMP), checkable=True)
-        self.__create_button(self.panel_3, 250, 280, 100, 120, "keyboard.png", press=lambda:self.__relay.activate_relay(PyRelay.RELAY_SWITCH_KVM), release=lambda:self.__relay.deactivate_relay(PyRelay.RELAY_SWITCH_KVM))
-        self.__create_button(self.panel_3, 400, 280, 100, 120, "laptop.png", self.__relay.toggle_relay(PyRelay.RELAY_LAPTOP_PSU), checkable=True)
+        self.__create_button(self.panel_3, 125, 180, 100, 120, "desk_lamp.png", lambda:self.__relay.toggle_relay(PyRelay.RELAY_DESK_LAMP), checkable=True)
+        self.__create_button(self.panel_3, 350, 180, 100, 120, "keyboard.png", press=lambda:self.__relay.activate_relay(PyRelay.RELAY_SWITCH_KVM), release=lambda:self.__relay.deactivate_relay(PyRelay.RELAY_SWITCH_KVM))
+        self.__create_button(self.panel_3, 575, 180, 100, 120, "laptop.png", lambda:self.__relay.toggle_relay(PyRelay.RELAY_LAPTOP_PSU), checkable=True)
         
         self.__create_button(self.panel_3, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
 
@@ -201,14 +202,12 @@ class PyStream(QMainWindow):
 
     def __create_button(self, parent, x, y, width, height, image, click=None, press=None, release=None, checkable=False):
         button = QPushButton(parent)
+        button.setCheckable(checkable)
         if checkable:
-            pressed_image = re.sub(r'.*(\.)[^.]*', '\\1', "_pressed.")
-            button.setStyleSheet("""@QPushButton {
-                    border-image: url(pystream/resource/" + """ + image + """;
-                }
-                QPushButton:checked {
-                    border-image: url(pystream/resource/" + """ + pressed_image + """
-                }@""")
+            pressed_image = image.replace(".", "_pressed.")
+            stre = "QPushButton {border-image: url(pystream/resource/" + image + ");} " \
+                 + "QPushButton:checked {border-image: url(pystream/resource/" + pressed_image + ");}"
+            button.setStyleSheet(stre)
         else:
             button.setStyleSheet("border-image: url(pystream/resource/" + image + ");")
         
@@ -219,7 +218,6 @@ class PyStream(QMainWindow):
         if release is not None:
             button.released.connect(release)
 
-        button.setCheckable(checkable)
         button.setGeometry(x, y, width, height)
         button.setFlat(True)
         return button
