@@ -1,3 +1,4 @@
+import time
 import relay_ft245r
 
 class PyRelay:
@@ -39,10 +40,19 @@ class PyRelay:
             self.__connect()
         
         self.__relay_board.switchoff(relay_number)
+    
+    def toggle_relay(self, relay_number):
+        if not self.__validate_input(relay_number):
+            return
+
+        if not self.__relay_board.is_connected:
+            self.__connect()
+        
+        state = self.__relay_board.getstatus(relay_number)
+        if state == 1:
+            self.__relay_board.switchoff(relay_number)
+        else:
+            self.__relay_board.switchon(relay_number)
 
     def __validate_input(self, input):
         return input >= 1 and input <= 4
-
-if __name__ == "__main__":
-   relay = PyRelay()
-   relay.activate_relay(PyRelay.RELAY_LAPTOP_PSU)
