@@ -1,5 +1,6 @@
 import time
-import relay_ft245r
+from pystream.relay_ft245r import FT245R
+
 
 class PyRelay:
     RELAY_LAPTOP_PSU = 1
@@ -7,7 +8,7 @@ class PyRelay:
     RELAY_SWITCH_KVM = 3
 
     def __init__(self):
-        self.__relay_board = relay_ft245r.FT245R()
+        self.__relay_board = FT245R()
         self.__connect()
 
     def __connect(self):

@@ -3,6 +3,7 @@ import time
 import json
 import logging
 import base64
+import re
 from datetime import datetime
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QStackedWidget, QWidget, QPushButton, QProgressBar
@@ -144,9 +145,9 @@ class PyStream(QMainWindow):
         background_3.setGeometry(0, 0, 800, 480)
         background_3.setStyleSheet("background-image: url(pystream/resource/page_2.jpg);")
 
-        self.__create_button(self.panel_3, 277, 280, 100, 120, "desk_lamp.png", self.__relay.toggle_relay(PyRelay.RELAY_DESK_LAMP), checkable=True)
-        self.__create_button(self.panel_3, 400, 280, 100, 120, "keyboard.png", press=lambda:self.__relay.activate_relay(PyRelay.RELAY_SWITCH_KVM), release=lambda:self.__relay.deactivate_relay(PyRelay.RELAY_SWITCH_KVM))
-        self.__create_button(self.panel_3, 523, 280, 100, 120, "laptop.png", self.__relay.toggle_relay(PyRelay.RELAY_LAPTOP_PSU), checkable=True)
+        self.__create_button(self.panel_3, 100, 280, 100, 120, "desk_lamp.png", self.__relay.toggle_relay(PyRelay.RELAY_DESK_LAMP), checkable=True)
+        self.__create_button(self.panel_3, 250, 280, 100, 120, "keyboard.png", press=lambda:self.__relay.activate_relay(PyRelay.RELAY_SWITCH_KVM), release=lambda:self.__relay.deactivate_relay(PyRelay.RELAY_SWITCH_KVM))
+        self.__create_button(self.panel_3, 400, 280, 100, 120, "laptop.png", self.__relay.toggle_relay(PyRelay.RELAY_LAPTOP_PSU), checkable=True)
         
         self.__create_button(self.panel_3, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
 
@@ -201,7 +202,7 @@ class PyStream(QMainWindow):
     def __create_button(self, parent, x, y, width, height, image, click=None, press=None, release=None, checkable=False):
         button = QPushButton(parent)
         if checkable:
-            pressed_image = image.sub(r'.*(\.)[^.]*', '\\1', "_pressed.")
+            pressed_image = re.sub(r'.*(\.)[^.]*', '\\1', "_pressed.")
             button.setStyleSheet("""@QPushButton {
                     border-image: url(pystream/resource/" + """ + image + """;
                 }
