@@ -3,7 +3,7 @@ from pystream.relay_ft245r import FT245R
 
 
 class PyRelay:
-    RELAY_LAPTOP_PSU = 1
+    RELAY_LAPTOP_PSU = 4
     RELAY_DESK_LAMP = 2
     RELAY_SWITCH_KVM = 3
 
