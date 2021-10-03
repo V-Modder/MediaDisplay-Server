@@ -16,7 +16,8 @@ from pystream.pyrelay import PyRelay
 from rpi_backlight import Backlight
 from rpi_backlight.utils import FakeBacklightSysfs
 
-from Xlib import Display
+from Xlib import X
+from Xlib import display
 from Xlib.ext import dpms
 
 from pystream.webservice import WebSocketServer, Metric
@@ -328,13 +329,13 @@ class PyStream(QMainWindow):
         GitUpdater.update(self.rootPath)
     
     def disable_screensaver(self):
-        display = display.Display()
-        display.set_screen_saver(0, 0, X.DontPreferBlanking, X.AllowExposures)
-        display.dpms_disable()
-        display.sync()
+        disp = display.Display()
+        disp.set_screen_saver(0, 0, X.DontPreferBlanking, X.AllowExposures)
+        disp.dpms_disable()
+        disp.sync()
 
     def enable_screensaver(self):
-        display = display.Display()
-        display.set_screen_saver(60, 60, X.DontPreferBlanking, X.AllowExposures)
-        display.dpms_disable()
-        display.sync()
+        disp = display.Display()
+        disp.set_screen_saver(60, 60, X.DontPreferBlanking, X.AllowExposures)
+        disp.dpms_disable()
+        disp.sync()
