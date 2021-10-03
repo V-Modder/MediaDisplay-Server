@@ -16,6 +16,9 @@ from pystream.pyrelay import PyRelay
 from rpi_backlight import Backlight
 from rpi_backlight.utils import FakeBacklightSysfs
 
+from Xlib import Display
+from Xlib.ext import dpms
+
 from pystream.webservice import WebSocketServer, Metric
 from pystream.analoggaugewidget import AnalogGaugeWidget 
 from pystream.rollinglabel import RollingLabel
@@ -285,6 +288,7 @@ class PyStream(QMainWindow):
         if data.reset is not None and data.reset:
             logging.info("[GUI] Restoring initial image")
             self.restore_gui()
+            self.disable_screensaver()
         else:
             if self.is_updating == False:
                 self.is_updating = True
@@ -297,6 +301,7 @@ class PyStream(QMainWindow):
                     self.is_updating = False
             else: 
                 print("Gui is locked")
+            self.enable_screensaver()
 
     def receive(self, data:Metric):
         if data is None:
@@ -321,3 +326,15 @@ class PyStream(QMainWindow):
 
     def update_app(self):
         GitUpdater.update(self.rootPath)
+    
+    def disable_screensaver(self):
+        display = display.Display()
+        display.set_screen_saver(0, 0, X.DontPreferBlanking, X.AllowExposures)
+        display.dpms_disable()
+        display.sync()
+
+    def enable_screensaver(self):
+        display = display.Display()
+        display.set_screen_saver(60, 60, X.DontPreferBlanking, X.AllowExposures)
+        display.dpms_disable()
+        display.sync()
