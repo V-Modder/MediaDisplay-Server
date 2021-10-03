@@ -50,6 +50,7 @@ class PyStream(QMainWindow):
             self.backlight = Backlight(backlight_sysfs_path=self.fakeBacklightSysfs.path)
         
         self.initUI()
+        self.enable_screensaver()
 
     def initUI(self):
         logging.info("[GUI] Init main frame")
@@ -330,12 +331,16 @@ class PyStream(QMainWindow):
     
     def disable_screensaver(self):
         disp = display.Display()
+        #print("Extensions: ")
+        #print(disp.display_extension_methods)
         disp.set_screen_saver(0, 0, X.DontPreferBlanking, X.AllowExposures)
-        disp.dpms_disable()
+        #disp.dpms_disable()
         disp.sync()
 
     def enable_screensaver(self):
         disp = display.Display()
-        disp.set_screen_saver(60, 60, X.DontPreferBlanking, X.AllowExposures)
-        disp.dpms_disable()
+        #print("Extension: ")
+        #print(disp.display_extension_methods)
+        disp.set_screen_saver(60, 60, X.DefaultBlanking, X.AllowExposures)
+        #disp.dpms_disable()
         disp.sync()
