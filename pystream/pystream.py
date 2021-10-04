@@ -40,6 +40,7 @@ class PyStream(QMainWindow):
         self.__server = WebSocketServer(self)
         self.__server.start()
         self.__relay = PyRelay()
+        self.enable_gui_switch = True
     
         try:
             self.backlight = Backlight()
@@ -227,6 +228,7 @@ class PyStream(QMainWindow):
         return button
 
     def __change_page(self, direction):
+        self.enable_gui_switch = False
         if direction == "Forward":
             if self.stack.currentIndex() < self.stack.count() - 1: 
                 self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
@@ -317,10 +319,11 @@ class PyStream(QMainWindow):
             self.backlight.brightness = data.display_brightness
 
     def enable_gui(self):
-        if self.stack.currentIndex() == 2:
+        if self.enable_gui_switch == True and self.stack.currentIndex() == 2:
                 self.stack.setCurrentIndex(0)
 
     def restore_gui(self):
+        self.enable_gui_switch = True
         self.stack.setCurrentIndex(2)
         self.label_room_temp.setText("--°C")
         self.label_time.setText("00:00")
