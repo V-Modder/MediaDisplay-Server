@@ -142,7 +142,7 @@ class PyStream(QMainWindow):
         self.__create_button(self.panel_2, 720, 400, 50, 50, "refresh.png", self.update_app)
 
         self.__create_button(self.panel_2, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
-        self.__create_button(self.panel_1, 774, 227, 26, 26, "arrow_right.png", lambda:self.__change_page("Forward"))
+        self.__create_button(self.panel_2, 774, 227, 26, 26, "arrow_right.png", lambda:self.__change_page("Forward"))
 
         #####################
         ##### Panel 3
