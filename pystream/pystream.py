@@ -289,7 +289,7 @@ class PyStream(QMainWindow):
         if data.reset is not None and data.reset:
             logging.info("[GUI] Restoring initial image")
             self.restore_gui()
-            self.disable_screensaver()
+            self.enable_screensaver()
         else:
             if self.is_updating == False:
                 self.is_updating = True
@@ -302,7 +302,7 @@ class PyStream(QMainWindow):
                     self.is_updating = False
             else: 
                 print("Gui is locked")
-            self.enable_screensaver()
+            self.disable_screensaver()
 
     def receive(self, data:Metric):
         if data is None:
