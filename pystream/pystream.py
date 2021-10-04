@@ -228,7 +228,7 @@ class PyStream(QMainWindow):
 
     def __change_page(self, direction):
         if direction == "Forward":
-            if self.stack.currentIndex() < self.stack.count() - 2: 
+            if self.stack.currentIndex() < self.stack.count() - 1: 
                 self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
         elif direction == "Backward":
             if self.stack.currentIndex() > 0: 
