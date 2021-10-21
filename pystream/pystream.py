@@ -151,9 +151,9 @@ class PyStream(QMainWindow):
         background_3.setGeometry(0, 0, 800, 480)
         background_3.setStyleSheet("background-image: url(pystream/resource/page_2.jpg);")
 
-        self.__create_button(self.panel_3, 125, 180, 100, 120, "desk_lamp.png", lambda:self.__relay.toggle_relay(PyRelay.BIG_1), checkable=True)
+        self.__create_button(self.panel_3, 125, 180, 100, 120, "desk_lamp.png", lambda:self.__relay.toggle_relay(PyRelay.BIG_2), checkable=True)
         self.__create_button(self.panel_3, 350, 180, 100, 120, "keyboard.png", press=lambda:self.__relay.activate_relay(PyRelay.SMALL_1), release=lambda:self.__relay.deactivate_relay(PyRelay.SMALL_1))
-        self.__create_button(self.panel_3, 575, 180, 100, 120, "laptop.png", lambda:self.__relay.toggle_relay(PyRelay.BIG_2), checkable=True)
+        self.__create_button(self.panel_3, 575, 180, 100, 120, "laptop.png", lambda:self.__relay.toggle_relay(PyRelay.BIG_1), checkable=True)
         
         self.__create_button(self.panel_3, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
 
