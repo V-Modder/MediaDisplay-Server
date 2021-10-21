@@ -333,7 +333,6 @@ class PyStream(QMainWindow):
     
     def disable_screensaver(self):
         disp = display.Display()
-        disp.
         disp.set_screen_saver(0, 0, X.DontPreferBlanking, X.AllowExposures)
         disp.sync()
 
