@@ -42,6 +42,8 @@ class PyStream(QMainWindow):
         self.__server.start()
         self.__relay = PyRelay()
         self.__temp = PyTemp()
+        self.__temp
+        self.__temp.start()
         self.enable_gui_switch = True
         self.timer = QTimer()
         self.timer.timeout.connect(self.__timer_tick)
@@ -232,10 +234,10 @@ class PyStream(QMainWindow):
         button.setFlat(True)
         return button
 
-    def __timer_tick(self):
+    def __timer_tick(self, temperature):
         time = QDateTime.currentDateTime()
         timeDisplay = time.toString('hh:mm')
-        temp = self.__temp.read_temp()
+        temp = self.__temp.temperature
 
         self.label_time.setText(timeDisplay)
         self.label_room_temp.setText("%1.0f°C" % temp)

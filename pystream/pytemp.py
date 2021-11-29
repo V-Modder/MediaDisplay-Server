@@ -1,7 +1,10 @@
-import os
 import glob
+import os
+import time
 
-class PyTemp:
+from PyQt5.QtCore import QThread
+
+class PyTemp(QThread):
 
     def __init__(self):
         os.system('modprobe w1-gpio')
@@ -12,14 +15,25 @@ class PyTemp:
             device = devices[0]
             self.__device_file = device + '/w1_slave'
         else:
-            self.__device_file = None    
+            self.__device_file = None   
 
-    def read_temp(self):
+        self.temperature = "--"
+
+    def run(self):
+        while True:
+            self.temperature = self.__read_temp()
+            self.new_temperature_reading(self.temperature)
+            time.sleep(1)
+
+    def new_temperature_reading(self, temp):
+        pass
+
+    def __read_temp(self):
         lines = self.__read_temp_raw()
         if lines[0].strip()[-3:] == 'YES':
             return self.__convertTemp(lines[1])
         else:
-            return 0
+            return "--"
 
     def __read_temp_raw(self):
         if self.__device_file is not None:
@@ -36,4 +50,4 @@ class PyTemp:
             temp_string = line[equals_pos + 2:]
             return float(temp_string) / 1000.0
         else:
-            return 0
+            return "--"
