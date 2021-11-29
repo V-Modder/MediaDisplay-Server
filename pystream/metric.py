@@ -50,18 +50,16 @@ class Metric(object):
     memory_load: int
     network: Network
     time: str
-    room_temperature: float
     playback_info: PlaybackInfo
     display_brightness: int
 
-    def __init__(self, reset: bool = None, cpu: List[CPU] = None, gpu: GPU = None, memory_load: int = None, network: Network = None, time: str = None, room_temperature: float = None, playback_info: PlaybackInfo = None, display_brightness: int = None, send_display_brightness: bool = None) -> None:
+    def __init__(self, reset: bool = None, cpu: List[CPU] = None, gpu: GPU = None, memory_load: int = None, network: Network = None, time: str = None, playback_info: PlaybackInfo = None, display_brightness: int = None, send_display_brightness: bool = None) -> None:
         self.reset = reset
         self.cpus = cpu
         self.gpu = gpu
         self.memory_load = memory_load
         self.network = network
         self.time = time
-        self.room_temperature = room_temperature
         self.playback_info = playback_info
         self.display_brightness = display_brightness
         self.send_display_brightness = send_display_brightness
@@ -79,4 +77,4 @@ def parseMetric(jsonStr):
     else:
         playback = None
 
-    return Metric(cpu = cpus, gpu = gpu, memory_load = simple_metric.memory_load, network = net, time = simple_metric.time, room_temperature = simple_metric.room_temperature, playback_info = playback, display_brightness = simple_metric.display_brightness, send_display_brightness = simple_metric.send_display_brightness)
+    return Metric(cpu = cpus, gpu = gpu, memory_load = simple_metric.memory_load, network = net, time = simple_metric.time, playback_info = playback, display_brightness = simple_metric.display_brightness, send_display_brightness = simple_metric.send_display_brightness)
