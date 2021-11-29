@@ -15,9 +15,9 @@ class PyTemp:
             self.__device_file = None    
 
     def read_temp(self):
-        lines = read_temp_raw()
+        lines = self.__read_temp_raw()
         if lines[0].strip()[-3:] == 'YES':
-            return __convertTemp(lines[1])
+            return self.__convertTemp(lines[1])
         else:
             return 0
 
