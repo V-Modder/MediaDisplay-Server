@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QStackedWidget, Q
 from PyQt5.QtGui import QIcon, QPixmap, QFont, QMouseEvent
 from PyQt5 import QtGui
 from PyQt5 import QtCore
-from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtCore import pyqtSignal, Qt, QTimer, QDateTime
 from pystream.pyrelay import PyRelay
 
 from rpi_backlight import Backlight
@@ -40,7 +40,10 @@ class PyStream(QMainWindow):
         self.__server = WebSocketServer(self)
         self.__server.start()
         self.__relay = PyRelay()
+        self.__temp = PyTemp()
         self.enable_gui_switch = True
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.__timer_tick)
     
         try:
             self.backlight = Backlight()
@@ -164,6 +167,7 @@ class PyStream(QMainWindow):
         self.restore_gui()
         self.setCursor(QtCore.Qt.BlankCursor)
         logging.info("[GUI] Init done")
+        self.timer.start(1000)
         self.receive_signal.connect(self.receive_gui)
         self.show()
 
@@ -227,6 +231,14 @@ class PyStream(QMainWindow):
         button.setFlat(True)
         return button
 
+    def __timer_tick(self):
+        time = QDateTime.currentDateTime()
+        timeDisplay = time.toString('hh:mm')
+        temp = self.__temp.read_temp()
+
+        self.label_time.setText(timeDisplay)
+        self.label_room_temp.setText("%1.0f°C" % temp)
+
     def __change_page(self, direction):
         self.enable_gui_switch = False
         if direction == "Forward":
@@ -264,8 +276,8 @@ class PyStream(QMainWindow):
         self.label_net_down.setText(data.network.down)
         self.label_net_up.setText(data.network.up)
         
-        self.label_room_temp.setText("%1.0f°C" % data.room_temperature)
-        self.label_time.setText(data.time)
+        #self.label_room_temp.setText("%1.0f°C" % data.room_temperature)
+        #self.label_time.setText(data.time)
 
         if data.playback_info is not None:
             self.label_media_title.setText(data.playback_info.title)
@@ -325,8 +337,8 @@ class PyStream(QMainWindow):
     def restore_gui(self):
         self.enable_gui_switch = True
         self.stack.setCurrentIndex(2)
-        self.label_room_temp.setText("--°C")
-        self.label_time.setText("00:00")
+        #self.label_room_temp.setText("--°C")
+        #self.label_time.setText("00:00")
 
     def update_app(self):
         GitUpdater.update(self.rootPath)
