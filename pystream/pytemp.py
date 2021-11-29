@@ -10,7 +10,7 @@ class PyTemp:
         devices = glob.glob('/sys/bus/w1/devices/28*')
         if len(devices) > 0:
             device = devices[0]
-            self.__device_file = device_folder + '/w1_slave'
+            self.__device_file = device + '/w1_slave'
         else:
             self.__device_file = None    
 
