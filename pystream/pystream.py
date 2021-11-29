@@ -24,6 +24,7 @@ from pystream.analoggaugewidget import AnalogGaugeWidget
 from pystream.rollinglabel import RollingLabel
 from pystream.gradiant_progressbar import GradiantProgressBar
 from pystream.event_message import EventMessage, Command, Action
+from pystream.pytemp import PyTemp
 
 def main(rootPath):
     app = QApplication(sys.argv)
