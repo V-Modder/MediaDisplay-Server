@@ -234,7 +234,7 @@ class PyStream(QMainWindow):
         button.setFlat(True)
         return button
 
-    def __timer_tick(self, temperature):
+    def __timer_tick(self):
         time = QDateTime.currentDateTime()
         timeDisplay = time.toString('hh:mm')
         temp = self.__temp.temperature
