@@ -7,6 +7,7 @@ from PyQt5.QtCore import QThread
 class PyTemp(QThread):
 
     def __init__(self):
+        super().__init__()
         os.system('modprobe w1-gpio')
         os.system('modprobe w1-therm')
         
