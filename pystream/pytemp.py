@@ -43,7 +43,7 @@ class PyTemp(QThread):
             f.close()
             return lines
         else:
-            return " No"
+            return [" No"]
 
     def __convertTemp(self, line):
         equals_pos = line.find('t=')
