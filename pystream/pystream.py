@@ -55,10 +55,10 @@ class PyStream(QMainWindow):
         self.stack = QStackedWidget(self)
         self.stack.setGeometry(0, 0, 800, 480)
         self.panel_1 = QWidget()
-        self.panel_2 = QWidget()
+        #self.panel_2 = QWidget()
         self.panel_3 = QWidget()
         self.stack.addWidget(self.panel_1)
-        self.stack.addWidget(self.panel_2)
+        #self.stack.addWidget(self.panel_2)
         self.stack.addWidget(self.panel_3)
 
         #####################
@@ -100,40 +100,40 @@ class PyStream(QMainWindow):
 
         #####################
         ##### Panel 2
-        background_2 = QLabel(self.panel_2)
-        background_2.setGeometry(0, 0, 800, 480)
-        background_2.setStyleSheet("background-image: url(pystream/resource/page_2.jpg);")
+        #background_2 = QLabel(self.panel_2)
+        #background_2.setGeometry(0, 0, 800, 480)
+        #background_2.setStyleSheet("background-image: url(pystream/resource/page_2.jpg);")
 
-        self.label_media_image = self.__create_label(self.panel_2, 325, 30)
-        self.label_media_image.resize(150, 150)
-        self.label_media_image.setStyleSheet("border-image: url(pystream/resource/media.png);")
+        #self.label_media_image = self.__create_label(self.panel_2, 325, 30)
+        #self.label_media_image.resize(150, 150)
+        #self.label_media_image.setStyleSheet("border-image: url(pystream/resource/media.png);")
 
-        self.label_media_status = self.__create_label(self.panel_2, 60, 50, text="-", color="#FFFFFF")
-        self.label_media_status.setAlignment(Qt.AlignCenter)
-        self.label_media_status.resize(150, 25)
+        #self.label_media_status = self.__create_label(self.panel_2, 60, 50, text="-", color="#FFFFFF")
+        #self.label_media_status.setAlignment(Qt.AlignCenter)
+        #self.label_media_status.resize(150, 25)
 
-        self.label_media_title = RollingLabel(self.panel_2)
-        font = QFont("Decorative", 15)
-        font.setBold(True)
-        self.label_media_title.setFont(font)
-        self.label_media_title.setStyleSheet("color: %s;" % "#FFFFFF");
-        self.label_media_title.setGeometry(10, 180, 780, 25)
-        self.label_media_title.setText("-")
+        #self.label_media_title = RollingLabel(self.panel_2)
+        #font = QFont("Decorative", 15)
+        #font.setBold(True)
+        #self.label_media_title.setFont(font)
+        #self.label_media_title.setStyleSheet("color: %s;" % "#FFFFFF");
+        #self.label_media_title.setGeometry(10, 180, 780, 25)
+        #self.label_media_title.setText("-")
 
-        self.label_media_artist = self.__create_label(self.panel_2, 0, 210, text="-", color="#FFFFFF")
-        self.label_media_artist.setAlignment(Qt.AlignCenter)
-        self.label_media_artist.resize(800, 25)
+        #self.label_media_artist = self.__create_label(self.panel_2, 0, 210, text="-", color="#FFFFFF")
+        #self.label_media_artist.setAlignment(Qt.AlignCenter)
+        #self.label_media_artist.resize(800, 25)
         
-        self.__create_button(self.panel_2, 362, 280, 75, 75, "play_pause.png", lambda:self.__send_key(Command.PlayPause))
-        self.__create_button(self.panel_2, 362, 365, 75, 75, "stop.png", lambda:self.__send_key(Command.Stop))
-        self.__create_button(self.panel_2, 277, 318, 75, 75, "previous.png", lambda:self.__send_key(Command.Previous))
-        self.__create_button(self.panel_2, 448, 318, 75, 75, "next.png", lambda:self.__send_key(Command.Next))
-        self.__create_button(self.panel_2, 40, 280, 75, 75, "volume_up.png", lambda:self.__send_key(Command.VolumeUp))
-        self.__create_button(self.panel_2, 40, 365, 75, 75, "volume_down.png", lambda:self.__send_key(Command.VolumeDown))
+        #self.__create_button(self.panel_2, 362, 280, 75, 75, "play_pause.png", lambda:self.__send_key(Command.PlayPause))
+        #self.__create_button(self.panel_2, 362, 365, 75, 75, "stop.png", lambda:self.__send_key(Command.Stop))
+        #self.__create_button(self.panel_2, 277, 318, 75, 75, "previous.png", lambda:self.__send_key(Command.Previous))
+        #self.__create_button(self.panel_2, 448, 318, 75, 75, "next.png", lambda:self.__send_key(Command.Next))
+        #self.__create_button(self.panel_2, 40, 280, 75, 75, "volume_up.png", lambda:self.__send_key(Command.VolumeUp))
+        #self.__create_button(self.panel_2, 40, 365, 75, 75, "volume_down.png", lambda:self.__send_key(Command.VolumeDown))
         
-        self.__create_button(self.panel_2, 720, 400, 50, 50, "refresh.png", self.update_app)
+        #self.__create_button(self.panel_2, 720, 400, 50, 50, "refresh.png", self.update_app)
 
-        self.__create_button(self.panel_2, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
+        #self.__create_button(self.panel_2, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
 
         #####################
         ##### Panel 3
