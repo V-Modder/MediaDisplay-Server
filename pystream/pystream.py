@@ -3,23 +3,28 @@ import time
 import json
 import logging
 import base64
+import re
 from datetime import datetime
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QStackedWidget, QWidget, QPushButton, QProgressBar
 from PyQt5.QtGui import QIcon, QPixmap, QFont, QMouseEvent
 from PyQt5 import QtGui
 from PyQt5 import QtCore
-from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtCore import pyqtSignal, Qt, QTimer, QDateTime
+from pystream.pyrelay import PyRelay
 
 from rpi_backlight import Backlight
 from rpi_backlight.utils import FakeBacklightSysfs
+
+from Xlib import X
+from Xlib import display
 
 from pystream.webservice import WebSocketServer, Metric
 from pystream.analoggaugewidget import AnalogGaugeWidget 
 from pystream.rollinglabel import RollingLabel
 from pystream.gradiant_progressbar import GradiantProgressBar
 from pystream.event_message import EventMessage, Command, Action
-from pystream.gitupdater import GitUpdater
+from pystream.pytemp import PyTemp
 
 def main(rootPath):
     app = QApplication(sys.argv)
@@ -35,13 +40,23 @@ class PyStream(QMainWindow):
         self.rootPath = rootPath
         self.__server = WebSocketServer(self)
         self.__server.start()
+        self.__relay = PyRelay()
+        self.__temp = PyTemp()
+        self.__temp
+        self.__temp.start()
+        self.enable_gui_switch = True
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.__timer_tick)
+    
         try:
             self.backlight = Backlight()
         except:
             self.fakeBacklightSysfs = FakeBacklightSysfs()
             self.fakeBacklightSysfs.__enter__()
             self.backlight = Backlight(backlight_sysfs_path=self.fakeBacklightSysfs.path)
+        
         self.initUI()
+        self.enable_screensaver()
 
     def initUI(self):
         logging.info("[GUI] Init main frame")
@@ -134,17 +149,28 @@ class PyStream(QMainWindow):
         #self.__create_button(self.panel_2, 720, 400, 50, 50, "refresh.png", self.update_app)
 
         #self.__create_button(self.panel_2, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
+        #self.__create_button(self.panel_2, 774, 227, 26, 26, "arrow_right.png", lambda:self.__change_page("Forward"))
 
         #####################
         ##### Panel 3
-        self.panel_3.setStyleSheet("background-image: url(pystream/resource/pyalarm.png);")
+        background_3 = QLabel(self.panel_3)
+        background_3.setGeometry(0, 0, 800, 480)
+        background_3.setStyleSheet("background-image: url(pystream/resource/page_2.jpg);")
 
+        self.__create_button(self.panel_3, 125, 180, 100, 120, "desk_lamp.png", lambda:self.__relay.toggle_relay(PyRelay.BIG_2), checkable=True)
+        self.__create_button(self.panel_3, 350, 180, 100, 120, "keyboard.png", press=lambda:self.__relay.activate_relay(PyRelay.SMALL_1), release=lambda:self.__relay.deactivate_relay(PyRelay.SMALL_1))
+        self.__create_button(self.panel_3, 575, 180, 100, 120, "laptop.png", lambda:self.__relay.toggle_relay(PyRelay.BIG_1), checkable=True)
+        
+        self.__create_button(self.panel_3, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
+
+        
         self.label_room_temp = self.__create_label(self, 110, 0, text="--°C", color="#FFFFFF")
         self.label_time = self.__create_label(self, 590, 0, text="00:00", font_size=15, color="#FFFFFF")
 
         self.restore_gui()
         self.setCursor(QtCore.Qt.BlankCursor)
         logging.info("[GUI] Init done")
+        self.timer.start(1000)
         self.receive_signal.connect(self.receive_gui)
         self.show()
 
@@ -186,17 +212,40 @@ class PyStream(QMainWindow):
         progress.setGeometry(x, y, width, height)
         return progress
 
-    def __create_button(self, parent, x, y, width, height, image, click):
+    def __create_button(self, parent, x, y, width, height, image, click=None, press=None, release=None, checkable=False):
         button = QPushButton(parent)
-        button.setStyleSheet("border-image: url(pystream/resource/" + image + ");")
-        button.clicked.connect(click)
+        button.setCheckable(checkable)
+        if checkable:
+            pressed_image = image.replace(".", "_pressed.")
+            stre = "QPushButton {border-image: url(pystream/resource/" + image + ");} " \
+                 + "QPushButton:checked {border-image: url(pystream/resource/" + pressed_image + ");}"
+            button.setStyleSheet(stre)
+        else:
+            button.setStyleSheet("border-image: url(pystream/resource/" + image + ");")
+        
+        if click is not None:
+            button.clicked.connect(click)
+        if press is not None:
+            button.pressed.connect(press)
+        if release is not None:
+            button.released.connect(release)
+
         button.setGeometry(x, y, width, height)
         button.setFlat(True)
         return button
 
+    def __timer_tick(self):
+        time = QDateTime.currentDateTime()
+        timeDisplay = time.toString('hh:mm')
+        temp = self.__temp.temperature
+
+        self.label_time.setText(timeDisplay)
+        self.label_room_temp.setText("%1.0f°C" % temp)
+
     def __change_page(self, direction):
+        self.enable_gui_switch = False
         if direction == "Forward":
-            if self.stack.currentIndex() < self.stack.count() - 2: 
+            if self.stack.currentIndex() < self.stack.count() - 1: 
                 self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
         elif direction == "Backward":
             if self.stack.currentIndex() > 0: 
@@ -230,8 +279,8 @@ class PyStream(QMainWindow):
         self.label_net_down.setText(data.network.down)
         self.label_net_up.setText(data.network.up)
         
-        self.label_room_temp.setText("%1.0f°C" % data.room_temperature)
-        self.label_time.setText(data.time)
+        #self.label_room_temp.setText("%1.0f°C" % data.room_temperature)
+        #self.label_time.setText(data.time)
 
         if data.playback_info is not None:
             self.label_media_title.setText(data.playback_info.title)
@@ -257,6 +306,7 @@ class PyStream(QMainWindow):
         if data.reset is not None and data.reset:
             logging.info("[GUI] Restoring initial image")
             self.restore_gui()
+            self.enable_screensaver()
         else:
             if self.is_updating == False:
                 self.is_updating = True
@@ -269,6 +319,7 @@ class PyStream(QMainWindow):
                     self.is_updating = False
             else: 
                 print("Gui is locked")
+            self.disable_screensaver()
 
     def receive(self, data:Metric):
         if data is None:
@@ -283,13 +334,26 @@ class PyStream(QMainWindow):
             self.backlight.brightness = data.display_brightness
 
     def enable_gui(self):
-        if self.stack.currentIndex() == 2:
+        if self.enable_gui_switch == True and self.stack.currentIndex() == 2:
                 self.stack.setCurrentIndex(0)
 
     def restore_gui(self):
+        self.enable_gui_switch = True
         self.stack.setCurrentIndex(2)
-        self.label_room_temp.setText("--°C")
-        self.label_time.setText("00:00")
+        #self.label_room_temp.setText("--°C")
+        #self.label_time.setText("00:00")
 
     def update_app(self):
         GitUpdater.update(self.rootPath)
+    
+    def disable_screensaver(self):
+        disp = display.Display()
+        disp.set_screen_saver(0, 0, X.DontPreferBlanking, X.AllowExposures)
+        disp.sync()
+
+    def enable_screensaver(self):
+        disp = display.Display()
+        screensaver = disp.get_screen_saver()
+        if screensaver.timeout != 60:
+            disp.set_screen_saver(60, 60, X.DefaultBlanking, X.AllowExposures)
+            disp.sync()
