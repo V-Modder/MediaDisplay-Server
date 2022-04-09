@@ -18,12 +18,16 @@ class PyTemp(QThread):
         else:
             self.__device_file = None   
 
-        self.temperature = "--"
+        self.temperature = 0
 
     def run(self):
         while True:
-            self.temperature = self.__read_temp()
-            self.new_temperature_reading(self.temperature)
+            try:
+                temp = self.__read_temp()
+                self.temperature = temp
+                self.new_temperature_reading(self.temperature)
+            except:
+                pass
             time.sleep(1)
 
     def new_temperature_reading(self, temp):
@@ -33,17 +37,12 @@ class PyTemp(QThread):
         lines = self.__read_temp_raw()
         if lines[0].strip()[-3:] == 'YES':
             return self.__convertTemp(lines[1])
-        else:
-            return "--"
 
     def __read_temp_raw(self):
-        if self.__device_file is not None:
-            f = open(self.__device_file, 'r')
-            lines = f.readlines()
-            f.close()
-            return lines
-        else:
-            return [" No"]
+        f = open(self.__device_file, 'r')
+        lines = f.readlines()
+        f.close()
+        return lines
 
     def __convertTemp(self, line):
         equals_pos = line.find('t=')
@@ -51,4 +50,5 @@ class PyTemp(QThread):
             temp_string = line[equals_pos + 2:]
             return float(temp_string) / 1000.0
         else:
-            return "--"
+            raise Exception("No number")
+
