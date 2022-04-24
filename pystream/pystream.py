@@ -44,6 +44,8 @@ class PyStream(QMainWindow):
         self.__temp = PyTemp()
         self.__temp
         self.__temp.start()
+        self.__stats_tab_index = 0
+        self.__buttons_tab_index = 1
         self.enable_gui_switch = True
         self.timer = QTimer()
         self.timer.timeout.connect(self.__timer_tick)
@@ -334,12 +336,12 @@ class PyStream(QMainWindow):
             self.backlight.brightness = data.display_brightness
 
     def enable_gui(self):
-        if self.enable_gui_switch == True and self.stack.currentIndex() == 2:
-                self.stack.setCurrentIndex(0)
+        if self.enable_gui_switch == True and self.stack.currentIndex() == self.__buttons_tab_index:
+                self.stack.setCurrentIndex(self.__stats_tab_index)
 
     def restore_gui(self):
         self.enable_gui_switch = True
-        self.stack.setCurrentIndex(2)
+        self.stack.setCurrentIndex(self.__buttons_tab_index)
         #self.label_room_temp.setText("--°C")
         #self.label_time.setText("00:00")
 
