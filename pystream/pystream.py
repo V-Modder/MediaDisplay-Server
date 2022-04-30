@@ -302,8 +302,8 @@ class PyStream(QMainWindow):
         self.progress_gpu_load.setValue(50)
         self.progress_gpu_mem_load.setValue(50)  
         
-        self.label_net_down.setText(0)
-        self.label_net_up.setText(0)
+        self.label_net_down.setText("0")
+        self.label_net_up.setText("0")
 
         self.stack.setCurrentIndex(self.__buttons_tab_index)
 
