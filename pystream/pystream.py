@@ -242,29 +242,6 @@ class PyStream(QMainWindow):
         
         self.label_net_down.setText(data.network.down)
         self.label_net_up.setText(data.network.up)
-        
-        #self.label_room_temp.setText("%1.0f°C" % data.room_temperature)
-        #self.label_time.setText(data.time)
-
-        if data.playback_info is not None:
-            self.label_media_title.setText(data.playback_info.title)
-            self.label_media_artist.setText(data.playback_info.artist)
-            if data.playback_info.image is not None:
-                self.label_media_image.pixmap().loadFromData(base64.b64decode(data.playback_info.image))
-            else:
-                self.label_media_image.pixmap().loadFromData("pystream/resource/media.png")        
-            if data.playback_info.status == 0:
-                self.label_media_status.setText("Closed")
-            if data.playback_info.status == 1:
-                self.label_media_status.setText("Opened")
-            if data.playback_info.status == 2:
-                self.label_media_status.setText("Changing")
-            if data.playback_info.status == 3:
-                self.label_media_status.setText("Stopped")
-            if data.playback_info.status == 4:
-                self.label_media_status.setText("Playing")
-            if data.playback_info.status == 5:
-                self.label_media_status.setText("Paused")
 
     def receive_gui(self, data:Metric):
         if data.reset is not None and data.reset:
@@ -327,7 +304,7 @@ class PyStream(QMainWindow):
         
         self.label_net_down.setText(0)
         self.label_net_up.setText(0)
-        
+
         self.stack.setCurrentIndex(self.__buttons_tab_index)
 
     def update_app(self):
