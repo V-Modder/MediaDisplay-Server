@@ -18,6 +18,7 @@ from rpi_backlight.utils import FakeBacklightSysfs
 
 from Xlib import X
 from Xlib import display
+import pyautogui
 
 from pystream.webservice import WebSocketServer, Metric
 from pystream.analoggaugewidget import AnalogGaugeWidget 
@@ -311,9 +312,10 @@ class PyStream(QMainWindow):
         GitUpdater.update(self.rootPath)
     
     def disable_screensaver(self):
-        disp = display.Display()
-        disp.set_screen_saver(0, 0, X.DontPreferBlanking, X.AllowExposures)
-        disp.sync()
+        # disp = display.Display()
+        # disp.set_screen_saver(0, 0, X.DontPreferBlanking, X.AllowExposures)
+        # disp.sync()
+        pyautogui.moveRel(0, 10)
 
     def enable_screensaver(self):
         disp = display.Display()
