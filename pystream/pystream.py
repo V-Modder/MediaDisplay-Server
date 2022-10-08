@@ -26,6 +26,7 @@ from pystream.rollinglabel import RollingLabel
 from pystream.gradiant_progressbar import GradiantProgressBar
 from pystream.event_message import EventMessage, Command, Action
 from pystream.pytemp import PyTemp
+from pystream.pysense import PySense
 
 def main(rootPath):
     app = QApplication(sys.argv)
@@ -47,6 +48,7 @@ class PyStream(QMainWindow):
         self.__temp.start()
         self.__stats_tab_index = 0
         self.__buttons_tab_index = 1
+        self.__pysense = PySense()
         self.enable_gui_switch = True
         self.timer = QTimer()
         self.timer.timeout.connect(self.__timer_tick)
@@ -124,6 +126,8 @@ class PyStream(QMainWindow):
 
         self.__create_button(self.panel_3, 125, 180, 100, 120, "desk_lamp.png", lambda:self.__relay.toggle_relay(PyRelay.BIG_2), checkable=True)
         self.__create_button(self.panel_3, 350, 180, 100, 120, "keyboard.png", press=lambda:self.__relay.activate_relay(PyRelay.SMALL_1), release=lambda:self.__relay.deactivate_relay(PyRelay.SMALL_1))
+        self.label_active_usb = self.__create_label(self.panel_3, 350, 280, width=100, height=25, text="1", color="#FFFFFF")
+        self.label_active_usb.setAlignment(Qt.AlignCenter)
         self.__create_button(self.panel_3, 575, 180, 100, 120, "laptop.png", lambda:self.__relay.toggle_relay(PyRelay.BIG_1), checkable=True)
         
         self.__create_button(self.panel_3, 0, 227, 26, 26, "arrow_left.png", lambda:self.__change_page("Backward"))
@@ -203,9 +207,11 @@ class PyStream(QMainWindow):
         time = QDateTime.currentDateTime()
         timeDisplay = time.toString('hh:mm')
         temp = self.__temp.temperature
+        active_usb = "2" if self.__pysense.check_state(PySense.INPUT_1) else "1"
 
         self.label_time.setText(timeDisplay)
         self.label_room_temp.setText("%1.0f°C" % temp)
+        self.label_active_usb.setText(active_usb)
 
     def __change_page(self, direction):
         self.enable_gui_switch = False
